@@ -1,153 +1,113 @@
-# User Finance Tracker — Frontend
+# 💻 User Finance Tracker — Frontend
 
-React single-page app for the [User Finance Tracker](../README.md) project. It provides a simple UI to manage users, record income and expense transactions, and view summary totals from the Spring Boot backend.
+This is the **React frontend** for the User Finance Tracker full-stack application. It provides a simple UI to manage users and track income/expenses through a Spring Boot backend.
 
-## Tech stack
+---
 
-- **React 19** with **Vite 8** for dev server and builds
-- **React Router 7** for client-side routing
-- **Axios** for HTTP requests to the REST API
-- **ESLint** for linting
+## 🚀 Features
 
-## Prerequisites
+* View all users
+* Create and delete users
+* Add income and expense transactions
+* View user-specific transactions
+* Dashboard with total income and expenses
 
-- Node.js 18+ (20+ recommended)
-- The Spring Boot backend running on `http://localhost:8080`
+---
 
-Start the backend from the project root:
+## 🧱 Tech Stack
 
-```bash
-./mvnw spring-boot:run
-```
+* React 19 (Vite)
+* Axios (API calls)
+* React Router
+* JavaScript (ES6+)
 
-On Windows:
+---
 
-```bash
-mvnw.cmd spring-boot:run
-```
-
-## Getting started
-
-Install dependencies and start the dev server:
-
-```bash
-npm install
-npm run dev
-```
-
-The app runs at `http://localhost:5173` by default. Vite enables hot module replacement (HMR) during development.
-
-### Other scripts
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start the Vite dev server |
-| `npm run build` | Production build to `dist/` |
-| `npm run preview` | Preview the production build locally |
-| `npm run lint` | Run ESLint |
-
-## How it fits together
-
-```
-Browser (localhost:5173)
-    │
-    ▼
-React pages (Dashboard, Users, Finances)
-    │
-    ▼
-src/api/financeApi.js  ──►  Spring Boot API (localhost:8080/api)
-```
-
-The frontend does not store data locally. All persistence goes through the backend. CORS is configured on the server to allow requests from `http://localhost:5173`, and Spring Security permits all API routes without authentication.
-
-## Project structure
+## 📁 Project Structure
 
 ```
 frontend/
-├── public/              # Static assets (favicon, icons)
+├── public/
 ├── src/
-│   ├── api/
-│   │   └── financeApi.js   # Axios client and API helpers
-│   ├── components/
-│   │   └── Navbar.jsx      # Top navigation links
+│   ├── api/financeApi.js
+│   ├── components/Navbar.jsx
 │   ├── pages/
-│   │   ├── Dashboard.jsx   # Summary totals
-│   │   ├── Users.jsx       # Create, list, delete users
-│   │   └── Finances.jsx    # View and add transactions per user
-│   ├── App.jsx             # Route definitions
-│   ├── main.jsx            # React entry point
-│   └── index.css           # Global styles
-├── index.html
-├── vite.config.js
-└── package.json
+│   │   ├── Dashboard.jsx
+│   │   ├── Users.jsx
+│   │   └── Finances.jsx
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── index.css
+├── package.json
+└── vite.config.js
 ```
 
-## Pages and routes
+---
 
-| Route | Page | Purpose |
-|-------|------|---------|
-| `/` | `Dashboard.jsx` | Shows total user count, income, and expenses for a fixed date range (currently hardcoded to 2025) |
-| `/users` | `Users.jsx` | Create users (name, email, phone, address) and delete existing users |
-| `/finances` | `Finances.jsx` | Load transactions for a user by ID and add new income/expense records |
+## ⚙️ Setup Instructions
 
-Navigation is handled by `Navbar.jsx` using React Router `Link` components.
+### 1️⃣ Install dependencies
 
-## API layer
+```bash id="fe1"
+npm install
+```
 
-All backend calls live in `src/api/financeApi.js`. A shared Axios instance points at `http://localhost:8080/api`.
+### 2️⃣ Start development server
 
-### User endpoints
+```bash id="fe2"
+npm run dev
+```
 
-| Function | HTTP | Path |
-|----------|------|------|
-| `getUsers()` | GET | `/users` |
-| `createUser(user)` | POST | `/users` |
-| `deleteUser(id)` | DELETE | `/users/{id}` |
+Frontend runs at:
 
-### Finance endpoints
+```
+http://localhost:5173
+```
 
-| Function | HTTP | Path |
-|----------|------|------|
-| `createFinance(finance)` | POST | `/finances` |
-| `getFinancesByUser(userId)` | GET | `/finances/user/{userId}` |
-| `getIncome(startDate, endDate)` | GET | `/finances/income?startDate=...&endDate=...` |
-| `getExpenses(startDate, endDate)` | GET | `/finances/expenses?startDate=...&endDate=...` |
+---
 
-Date parameters use ISO format: `YYYY-MM-DD`.
+## 🔌 Backend Connection
 
-## Typical workflow
+The frontend communicates with the Spring Boot backend:
 
-1. Start the backend, then run `npm run dev`.
-2. Open **Users** and create one or more users.
-3. Note a user's `id` from the list (shown implicitly via delete actions; the API returns it in the response).
-4. Open **Finances**, enter that user ID, and load or add transactions.
-5. Open **Dashboard** to see aggregate income and expense totals.
+```
+http://localhost:8080/api
+```
 
-Users must exist before transactions can be created — the backend links each finance record to a user.
+If backend runs on a different URL, update:
 
-## Backend contract notes
+```js id="fe3"
+src/api/financeApi.js
+```
 
-When adding a transaction, the backend expects a `FinanceRequest` body with:
+Example:
 
-- `userId` (required)
-- `description`
-- `amount`
-- `date` (ISO date string)
-- `type` (`"INCOME"` or `"EXPENSE"`)
+```js id="fe4"
+const API = axios.create({
+  baseURL: "http://localhost:8080/api"
+});
+```
 
-The **Finances** page currently sends only `description`, `amount`, and `type`. If transaction creation fails, ensure `userId` and `date` are included in the payload sent by `createFinance()`.
+---
 
-## Known limitations
+## ⚠️ Notes
 
-- No authentication or login flow in the UI.
-- No edit endpoints wired up — users and transactions can be created and deleted, but not updated.
-- Dashboard date range is hardcoded; there is no date picker yet.
-- Finances page requires manually entering a user ID instead of selecting from a dropdown.
-- Styling is minimal inline CSS; no component library is used.
+* Requires backend to be running
+* No authentication implemented
+* Uses hardcoded date range for dashboard
+* CORS must be enabled in backend
 
-## Configuration
+---
 
-- **API base URL** — defined in `src/api/financeApi.js`. Change `baseURL` if the backend runs on a different host or port.
-- **Vite** — see `vite.config.js` for build and plugin settings.
+## 📈 Future Improvements
 
-To point the frontend at a different backend during local development, update the `baseURL` in `financeApi.js` or introduce an environment variable (e.g. `VITE_API_URL`) if you add that support later.
+* Add charts (income vs expense visualization)
+* Add login/authentication
+* Improve dashboard filtering
+* Deploy to Vercel
+
+---
+
+## 👨‍💻 Author
+
+Built as a full-stack project using React + Spring Boot
