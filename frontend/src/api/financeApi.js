@@ -3,9 +3,9 @@ import axios from "axios";
 
 // Create a reusable Axios instance
 // All requests will automatically start with:
-// http://localhost:8080/api
+// YOUR_RENDER_BACKEND_URL/api
 const API = axios.create({
-  baseURL: "http://localhost:8080/api",
+  baseURL: import.meta.env.VITE_API_URL + "/api",
 });
 
 /*
