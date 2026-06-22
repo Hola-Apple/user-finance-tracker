@@ -26,6 +26,9 @@ public class DataInitializer {
 
                 User user = new User();
                 user.setName("Default User");
+                user.setEmail("default@example.com");
+                user.setPhone("1234567890");
+                user.setAddress("123 Main St, Anytown, USA");
 
                 user = userRepository.save(user);
 
