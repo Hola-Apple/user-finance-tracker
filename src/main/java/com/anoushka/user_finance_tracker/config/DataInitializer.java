@@ -22,8 +22,7 @@ public class DataInitializer {
         return args -> {
 
             // Only seed data if the database is empty
-            //userRepository.count() == 0
-            if (true) {
+            if (userRepository.count() == 0) {
 
                 User user = new User();
                 user.setName("Default User");
